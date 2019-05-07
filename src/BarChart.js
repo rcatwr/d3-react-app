@@ -68,7 +68,7 @@ class BarChart extends Component {
      let parsedData = {};
 
 
-      fetch('https://api.coindesk.com/v1/bpi/historical/close.json?start=2018-12-31&end=2019-04-01')
+      fetch('https://api.exchangeratesapi.io/history?start_at=2019-04-01&end_at=2019-05-01&base=USD')
           .then((response)=>{return response.json();})
           .then((data)=>{
               parsedData = parseData(data);
@@ -79,19 +79,19 @@ class BarChart extends Component {
 
         function parseData(data){
               var arr = [];
-              for (var i in data.bpi) {
+              for (var i in data.rates) {
                   arr.push({
                       date: new Date(i), //this is the date
-                      value: +data.bpi[i] // converts the string to a number
+                      value: +data.rates[i].CAD // converts the string to a number
                   });
               };
-              return arr;
+              return arr.sort((a,b)=>{return a.date - b.date});
           }
 
     /* this is a function to  pars data into key-value pairs
     @para {object} data Object containing historical data for Bitcoin price index (bpi)*/
 
-    
+
   }
 
    render(){
