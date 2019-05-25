@@ -1,7 +1,16 @@
 import React, {Component} from 'react'
 import * as d3 from 'd3'
 
+//set up state
 class BarChart extends Component {
+    constructor(){
+      super()
+      this.state = {
+        parsedData : {},
+        currency: `CAD`,
+        base: `EUR`
+      }
+    }
 
     drawChart(data){
       //first part -- setup the svg canvas -- this is cool -- first creating an object to call on!
@@ -54,7 +63,7 @@ class BarChart extends Component {
           .attr("stroke", "steelblue")
           .attr("stroke-linejoin", "round")
           .attr("stroke-linecap", "round")
-          .attr("stroke-width", 1.5)
+          .attr("stroke-width", 3)
           .attr("d", line);
 
 
@@ -65,24 +74,30 @@ class BarChart extends Component {
   componentDidMount(){
 
     // Load data from API when DOM Content has been loaded
-     let parsedData = {};
+     //let parsedData = {};
 
 
-      fetch('https://api.exchangeratesapi.io/history?start_at=2019-04-01&end_at=2019-05-01&base=USD')
+      fetch(`https://api.exchangeratesapi.io/history?start_at=2019-04-01&end_at=2019-05-01&base=${this.state.base}&symbols=${this.state.currency}`)
           .then((response)=>{return response.json();})
           .then((data)=>{
-              parsedData = parseData(data);
-              this.drawChart(parsedData);
+              //parsedData = parseData(data);
+              //this.drawChart(parsedData);
+              //setting state here
+              this.setState({
+                 parsedData : parseData(data)
+              })
+              this.drawChart(this.state.parsedData);
          })
 
           .catch((err)=>{console.log(err);})
 
         function parseData(data){
+
               var arr = [];
               for (var i in data.rates) {
                   arr.push({
                       date: new Date(i), //this is the date
-                      value: +data.rates[i].CAD // converts the string to a number
+                      value: data.rates[i].CAD // converts the string to a number
                   });
               };
               return arr.sort((a,b)=>{return a.date - b.date});
@@ -90,14 +105,16 @@ class BarChart extends Component {
 
     /* this is a function to  pars data into key-value pairs
     @para {object} data Object containing historical data for Bitcoin price index (bpi)*/
-
+    this.drawChart(this.state.parsedData);
 
   }
 
    render(){
-     return <div>
-          <svg></svg>
-     </div>
+     //conditional rendering based on state
+
+     return (<div>
+          <svg> </svg>
+     </div>)
    }
 }
 
