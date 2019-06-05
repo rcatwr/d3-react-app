@@ -7,8 +7,8 @@ class BarChart extends Component {
       super()
       this.state = {
         parsedData : {},
-        currency: `CAD`,
-        base: `EUR`
+        currency: `USD`,
+        base: `RUB`
       }
     }
 
@@ -80,6 +80,8 @@ class BarChart extends Component {
       fetch(`https://api.exchangeratesapi.io/history?start_at=2019-04-01&end_at=2019-05-01&base=${this.state.base}&symbols=${this.state.currency}`)
           .then((response)=>{return response.json();})
           .then((data)=>{
+
+
               //parsedData = parseData(data);
               //this.drawChart(parsedData);
               //setting state here
@@ -91,18 +93,26 @@ class BarChart extends Component {
 
           .catch((err)=>{console.log(err);})
 
-        function parseData(data){
+
+        const parseData = (data) => {
+              const {rates} = data;
+
+             //let curr1 = Object.keys(rates);
+
+
 
               var arr = [];
-              for (var i in data.rates) {
+              for (var i in rates) {
+                //new
+                  let currKey = Object.keys(rates[i])[0]
+                //new
                   arr.push({
                       date: new Date(i), //this is the date
-                      value: data.rates[i].CAD // converts the string to a number
+                      value: rates[i][currKey] // converts the string to a number
                   });
               };
               return arr.sort((a,b)=>{return a.date - b.date});
           }
-
     /* this is a function to  pars data into key-value pairs
     @para {object} data Object containing historical data for Bitcoin price index (bpi)*/
     this.drawChart(this.state.parsedData);
