@@ -7,8 +7,8 @@ class BarChart extends Component {
       super()
       this.state = {
         parsedData : {},
-        currency: `USD`,
-        base: `RUB`
+        currency: `CAD`,
+        base: `USD`
       }
     }
 
@@ -32,6 +32,12 @@ class BarChart extends Component {
 
       const y = d3.scaleLinear()
           .rangeRound([height, 0])
+          // define the area
+
+     var area = d3.area()
+        .x(function(d) { return x(d.date); })
+        .y0(height)
+        .y1(function(d) { return y(d.value); });
 
       var line = d3.line()
           .x((d)=> {return x(d.date)})
@@ -55,16 +61,21 @@ class BarChart extends Component {
           .attr("y", 6)
           .attr("dy", "0.71em" )
           .attr("text-anchor", "end")
-          .text("Price ($)");
+          .text(`Price (${this.state.base})`);
 
       g.append("path")
           .datum(data)
           .attr("fill", "none")
-          .attr("stroke", "steelblue")
+          .attr("stroke", "tomato")
           .attr("stroke-linejoin", "round")
           .attr("stroke-linecap", "round")
           .attr("stroke-width", 3)
           .attr("d", line);
+
+      g.append("path")
+          .data([data])
+          .attr("fill", "rgba(255, 99, 71, 0.5)")
+          .attr("d", area);
 
 
     }

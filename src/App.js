@@ -5,7 +5,7 @@ import BarChart from './BarChart'
 function App() {
   return (
     <div className="App">
-      <h1>Rockin!</h1>
+      <h2>World Currency Tracker</h2>
       <BarChart />
     </div>
   );
